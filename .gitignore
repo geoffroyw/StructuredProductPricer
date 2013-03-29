@@ -19,6 +19,7 @@
 *.suo
 *.vcxproj
 *.vcxproj.filters
+*.vcxproj.user
 
 #Lib
 /lib
