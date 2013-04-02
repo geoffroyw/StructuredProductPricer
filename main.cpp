@@ -1,8 +1,5 @@
 #include <stdio.h>
-#include <boost/numeric/ublas/matrix.hpp>
-#include <boost/numeric/ublas/symmetric.hpp>
-#include <boost/random.hpp>
-#include <boost/random/normal_distribution.hpp>
+#include <iostream>
 #include "BestPlus.h"
 #include "BonusCliquet.h"
 
@@ -14,9 +11,20 @@ int main( int argc, const char* argv[] )
 {
 	printf( "\nHello World\n\n" );
 	
-	BestPlusPrice();
-	cout << "\n\n\n";
-	BonusCliquetPrice();
+	BaseProduct *p = new BestPlus();
+	(*p).price();
+	cout << (*p).getPrice() <<"\n";
+	cout << "Inf : " << (*p).getConfidenceLowerBound() << "\n";
+	cout << "Sup : " << (*p).getConfidenceUpperBound() << "\n";
+	delete p;
+
+	
+	p = new BonusCliquet();
+	(*p).price();
+	cout << (*p).getPrice() <<"\n";
+	cout << "Inf : " << (*p).getConfidenceLowerBound() << "\n";
+	cout << "Sup : " << (*p).getConfidenceUpperBound() << "\n";
+	delete p;
 
 	system("PAUSE");
 }

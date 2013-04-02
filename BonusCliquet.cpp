@@ -7,9 +7,14 @@
 #include <boost/numeric/ublas/symmetric.hpp>
 #include <boost/random.hpp>
 #include <boost/random/normal_distribution.hpp>
+#include "BonusCliquet.h"
 using namespace std;
 
-void BonusCliquetPrice() {
+BonusCliquet::BonusCliquet(void) : BaseProduct()
+{
+}
+
+void BonusCliquet::price() {
 	double maturity = 7.0;
 	double performance_obj = 0.35;
 	int nbTimeStep = 52*maturity;
@@ -80,21 +85,18 @@ void BonusCliquetPrice() {
 		payoffs.push_back(payoff);
 	}
 
-	double prix = sum_payoffs/nbSimulation; 
-	cout << "Prix : ";
-	cout << prix;
-	cout << "€\n";
+	mPrice = sum_payoffs/nbSimulation;
 
 	//Variance des payoffs
 	double var = 0;
 	for(int i=0;i<nbSimulation;i++){
-		var+=pow((payoffs[i]-sum_payoffs/nbSimulation),2);
+		var+=pow((payoffs[i]-mPrice),2);
 	}
 	var/=(nbSimulation-1);
 	var=sqrt(var);
 
-	cout << "Intervalle de confiance à 95%\n";
-	cout << "Borne inf : " << prix-2*var/sqrt(nbSimulation) << "\n";
-	cout << "Borne sup : " << prix+2*var/sqrt(nbSimulation) << "\n";
+	mConfidenceLowerBound = mPrice-2*var/sqrt(nbSimulation);
+	mConfidenceUpperBound = mPrice+2*var/sqrt(nbSimulation);
+	return;
 
 }
