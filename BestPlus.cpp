@@ -77,20 +77,24 @@ void BestPlus::price() {
 	//Simulation
 	for(int k = 0;k<nbSimulation;k++) {
 		
-		vector<double> vols;
+		///vector<double> vols;
+		boost::numeric::ublas::matrix<double> vols(nbAsj,nbTimestep);
 
 		//On génère des vars indépendantes distribuées normalement
-		for(int i = 0; i<nbAsj; i++) {
-			randVars.push_back(var_nor());
-		}
-		
-		for(int i=0;i<nbAsj;i++) {
-			temp=0;
-			for(int j=0;j<=i;j++) {
-				temp+=randVars[j]*cholM(i,j);
+		for(int p = 0;p<nbTimestep;p++) {
+			for(int i = 0; i<nbAsj; i++) {
+				randVars.push_back(var_nor());
 			}
-			mRandVars.push_back(temp);
-			vols.push_back(temp);
+		
+			for(int i=0;i<nbAsj;i++) {
+				temp=0;
+				for(int j=0;j<=i;j++) {
+					temp+=randVars[j]*cholM(i,j);
+				}
+				mRandVars.push_back(temp);
+				//vols.push_back(temp);
+				vols(i,p) = temp;
+			}
 		}
 		
 		//Simulation des trajectoires
@@ -101,7 +105,8 @@ void BestPlus::price() {
 			S_ts(i,0) = spot_prices[i];
 
 			for(int j = 1; j<nbTimestep;j++) {
-				S_ts(i,j)= S_ts(i,j-1)*exp(r+sd*vols[i]);
+				//S_ts(i,j)= S_ts(i,j-1)*exp(r+sd*vols[i]);
+				S_ts(i,j)= S_ts(i,j-1)*exp(r+sd*vols(i,j));
 			}
 		}
 
@@ -212,6 +217,10 @@ void BestPlus::cholesky() {
 }
 
 
+void BestPlus::computeGreeks(){
+
+}
+
 void BestPlus::setSpotPrices(vector<double> sps) {
 	spotPrices = sps;
 }
@@ -227,3 +236,5 @@ void BestPlus::setPerformanceObj(double obj) {
 void BestPlus::setCapital(double c) {
 	capital = c;
 }
+
+

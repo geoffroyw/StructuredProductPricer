@@ -18,6 +18,7 @@ public:
 	BestPlus(void);
 	~BestPlus(void);
 	void price();
+	void computeGreeks();
 	void setNbAsj(int nb);
 	void setSpotPrices(std::vector<double> spotPrices);
 	void addSpotPrice(double spotPrice);
