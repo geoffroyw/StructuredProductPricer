@@ -12,35 +12,31 @@ using namespace std;
 
 BonusCliquet::BonusCliquet(void) : BaseProduct()
 {
+	maturity = 7.0;
+	nbTimestep = 52*(int)maturity;
+	nbSimulation = 1000;
+	spotPrice = 100.0;
+	lowBarrier = 80;
+	highBarrier = 120;
+	vol = 0.3;
 }
 
 void BonusCliquet::price() {
-	double maturity = 7.0;
-	double performance_obj = 0.35;
-	int nbTimeStep = 52*maturity;
-	int nbSimulation = 1000;
-	double sum_payoffs(0);
-	double riskFreeRate = 0.03;
-	double spotPrice = 100.0;
-	double low_barrier = 80;
-	double high_barrier = 120;
-	double vol = 0.3;
-	vector<double> payoffs;
 	double payoff;
+	double sum_payoffs = 0.0;
+	double delta_t = maturity/nbTimestep;
+	double r;
+	double sd;
+	double S_t;
 
-
+	vector<double> payoffs;
+	
 	bool low_barrier_reach = false;
 	bool high_barrier_reach = true;
 
 	boost::mt19937 rng; 
 	boost::normal_distribution<> nd(0.0, 1.0);
 	boost::variate_generator<boost::mt19937&, boost::normal_distribution<> > var_nor(rng, nd);
-
-
-	double delta_t = maturity/nbTimeStep;
-	double r;
-	double sd;
-	double S_t;
 
 	for(int k=0;k<nbSimulation;k++) {
 		high_barrier_reach = false;
@@ -51,29 +47,32 @@ void BonusCliquet::price() {
 		r = (riskFreeRate-0.5*pow(vol,2))*delta_t;
 		sd = vol*sqrt(delta_t);
 		S_t = spotPrice;
-		for(int j = 1; j<nbTimeStep;j++) {
-			S_t= S_t*exp(r+sd*var_nor());
+		for(int j = 1; j<nbTimestep;j++) {
+			double rnd = var_nor();
+			mRandVars.push_back(rnd);
+			S_t= S_t*exp(r+sd*rnd);
 
-			if(S_t>=high_barrier) {
+			if(S_t>=highBarrier) {
 				high_barrier_reach = true;
 			}
-			if(S_t<=low_barrier) {
+			if(S_t<=lowBarrier) {
 				low_barrier_reach = true;
 			}
 		}
 
-		payoff = 0;
+		payoff = 0.0;
+
 		if(!low_barrier_reach) {
-			if(S_t>high_barrier) {
+			if(S_t>highBarrier) {
 				payoff=S_t;
 			}
 			else {
-				payoff=high_barrier;
+				payoff=highBarrier;
 			}
 		}
 		else {
 			if(high_barrier_reach) {
-				payoff = high_barrier;
+				payoff = highBarrier;
 			}
 			else {
 				payoff=S_t;
@@ -99,4 +98,21 @@ void BonusCliquet::price() {
 	mConfidenceUpperBound = mPrice+2*var/sqrt(nbSimulation);
 	return;
 
+}
+
+
+void BonusCliquet::setSpotPrice(double price) {
+	spotPrice = price;
+}
+
+void BonusCliquet::setLowBarrier(double b) {
+	lowBarrier=b;
+}
+
+void BonusCliquet::setHighBarrier(double b) {
+	highBarrier = b;
+}
+
+void BonusCliquet::setVol(double v) {
+	vol = v;
 }
