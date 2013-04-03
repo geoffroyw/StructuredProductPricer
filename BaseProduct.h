@@ -19,6 +19,10 @@ protected:
 	double rho;
 	double vega;
 	double riskFreeRate;
+	double deltaS;
+	double deltaR;
+	double deltaSigma;
+	double deltaT;
 	
 public:
 	BaseProduct(void);
@@ -26,17 +30,23 @@ public:
 	double getConfidenceLowerBound();
 	double getConfidenceUpperBound();
 	virtual void price();
-	virtual void computeGreeks();
+	virtual void computeGreeks()=0;
+	virtual void simulatePaths()=0;
+	virtual void simulateRandVars()=0;
 	double getPrice();
 	double getDelta();
 	double getGamma();
 	double getTheta();
 	double getRho();
 	double getVega();
-	void setMaturity(double m);
-	void setNbTimestep(double nb);
-	void setNbSimulation(double nb);
+	virtual void setMaturity(double m);
+	void setNbTimestep(int nb);
+	void setNbSimulation(int nb);
 	void setRiskFreeRate(double r);
+	void setDeltaS(double ds);
+	void setDeltaT(double dt);
+	void setDeltaR(double dr);
+	void setDeltaSigma(double ds);
 };
 
 #endif

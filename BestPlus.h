@@ -17,14 +17,17 @@ private:
 public:
 	BestPlus(void);
 	~BestPlus(void);
-	void price();
-	void computeGreeks();
+	virtual void price();
+	virtual void computeGreeks();
+	virtual void simulatePaths();
+	virtual void simulateRandVars();
 	void setNbAsj(int nb);
 	void setSpotPrices(std::vector<double> spotPrices);
 	void addSpotPrice(double spotPrice);
 	void setCorrelations(boost::numeric::ublas::symmetric_matrix<double, boost::numeric::ublas::lower> corr);
 	void setPerformanceObj(double obj);
 	void setCapital(double c);
+	
 
 };
 
