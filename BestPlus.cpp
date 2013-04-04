@@ -14,7 +14,7 @@
 using namespace std;
 
 
-BestPlus::BestPlus(void) : BaseProduct()
+BestPlus::BestPlus(void) : BasketProduct()
 {
 	maturity = 7.0;
 	nbTimestep = 7;
@@ -47,29 +47,6 @@ void BestPlus::price() {
 	return;
 }
 
-// Décomposition de Cholesky
-void BestPlus::cholesky() {
-	double x;
-	for(unsigned i=0;i<cholM.size1();++i) {
-		for(unsigned j=0;j<cholM.size2();++j) {
-			cholM(i,j)=0;
-		}
-	}
-	for(int i=0;i<cholM.size1();i++) {
-		for(int j=i;j<cholM.size2();j++) {
-			x = correlations(i,j);
-			for(int k=0;k<i-1;k++) {
-				x = x-cholM(i,k)*cholM(j,k);
-			}
-			if(i==j) {
-				cholM(i,i)=sqrt(x);
-			}
-			else {
-				cholM(j,i)=x/cholM(i,i);
-			}
-		}
-	}
-}
 
 void BestPlus::simulatePaths() {
 	int timestep_first_coupon = -1;
@@ -288,15 +265,6 @@ void BestPlus::computeGreeks(){
 	simulateRandVars();
 }
 
-void BestPlus::setSpotPrices(vector<double> sps) {
-	spotPrices = sps;
-}
-void BestPlus::addSpotPrice(double sp) {
-	spotPrices.push_back(sp);
-}
-void BestPlus::setCorrelations(boost::numeric::ublas::symmetric_matrix<double, boost::numeric::ublas::lower> corr) {
-	correlations = corr;
-}
 void BestPlus::setPerformanceObj(double obj) {
 	performance_obj = obj;
 }
