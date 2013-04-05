@@ -13,27 +13,28 @@
 #include <boost/numeric/ublas/symmetric.hpp>
 #include <boost/random.hpp>
 #include <boost/random/normal_distribution.hpp>
+#include <stdexcept>
 
 using namespace std;
 
 WinWin::WinWin(void) : BasketProduct()
 {
-	nbAsj = 10;
-	maturity = 5.0;
-	nbTimestep = 52*(int)maturity;
-	nbSimulation = 1000;
-	barrierCoupon = 5.0;
-	finalCoupon = 10.0;
-	highBarrier = 0.35;
-	lowBarrier = 0.01;
-	capital = 100;
-
+	setNbAsj(10);
+	setMaturity(5.0);
+	setNbTimestep(52*(int)maturity);
+	setNbSimulation(1000);
+	setBarrierCoupon(5.0);
+	setFinalCoupon(10.0);
+	setHighBarrier(0.35);
+	setLowBarrier(0.01);
+	setCapital(100);
+	
 	correlations.resize(nbAsj,nbAsj,false);
 	cholM.resize(nbAsj,nbAsj,false);
 
 	//On initialise tous les prix spots à 100
 	for(int i =0;i<nbAsj;i++) {
-		spotPrices.push_back(100.0);
+		addSpotPrice(100.0);
 	}
 
 	// Initialisation de la matriec des corrélations
@@ -230,4 +231,56 @@ void WinWin::computeGreeks(){
 	vega = (s2-s1)/(2*deltaSigma);
 	setCorrelations(initialCorrelations);
 	simulateRandVars();
+}
+
+
+/*(5.0);
+	setFinalCoupon(10.0);
+	setHighBarrier(0.35);
+	setLowBarrier(0.01);
+	setCapital(100);*/
+
+void WinWin::setBarrierCoupon(double c) {
+	if(c<=0) {
+		throw out_of_range("Le coupon en cas de croisement d'une barrière doit être strictement positif");
+	}
+	else {
+		barrierCoupon = c;
+	}
+}
+
+void WinWin::setFinalCoupon(double c) {
+	if(c<=0) {
+		throw out_of_range("Le coupon final doit être strictement positif");
+	}
+	else {
+		finalCoupon = c;
+	}
+}
+
+void WinWin::setHighBarrier(double b) {
+	if(b<=0) {
+		throw out_of_range("La barrière haute doit être strictement positive");
+	}
+	else {
+		highBarrier= b;
+	}
+}
+
+void WinWin::setLowBarrier(double b) {
+	if(b<=0) {
+		throw out_of_range("La barrière basse doit être strictement positive");
+	}
+	else {
+		lowBarrier = b;
+	}
+}
+
+void WinWin::setCapital(double c) {
+	if(c<=0) {
+		throw out_of_range("Le capitaldoit être strictement positif");
+	}
+	else {
+		capital = c;
+	}
 }

@@ -8,17 +8,18 @@
 #include <boost/random.hpp>
 #include <boost/random/normal_distribution.hpp>
 #include "BonusCliquet.h"
+#include <stdexcept>
 using namespace std;
 
 BonusCliquet::BonusCliquet(void) : BaseProduct()
 {
-	maturity = 7.0;
-	nbTimestep = 52*(int)maturity;
-	nbSimulation = 1000;
-	spotPrice = 100.0;
-	lowBarrier = 80;
-	highBarrier = 120;
-	vol = 0.3;
+	setMaturity(7.0);
+	setNbTimestep(52*(int)maturity);
+	setNbSimulation(1000);
+	setSpotPrice(100.0);
+	setLowBarrier(80.0);
+	setHighBarrier(120.0);
+	setVol(0.3);
 }
 
 void BonusCliquet::price() {
@@ -165,22 +166,42 @@ void BonusCliquet::computeGreeks() {
 
 
 void BonusCliquet::setSpotPrice(double price) {
-	spotPrice = price;
+	if(price<=0) {
+		throw out_of_range("Le prix Spot doit être strictement positif");
+	}
+	else {
+		spotPrice = price;
+	}
 }
 
 void BonusCliquet::setLowBarrier(double b) {
-	lowBarrier=b;
+	if(b<=0) {
+		throw out_of_range("La barrière inférieure doit être strictement positive");
+	}
+	else {
+		lowBarrier=b;
+	}
 }
 
 void BonusCliquet::setHighBarrier(double b) {
-	highBarrier = b;
+	if(b<=0) {
+		throw out_of_range("La barrière supérieure doit être strictement positive");
+	}
+	else {
+		highBarrier = b;
+	}
 }
 
 void BonusCliquet::setVol(double v) {
-	vol = v;
+	if(v<0 || v>1) {
+		throw out_of_range("La volatilité doit être comprise entre 0 et 1");
+	}
+	else {
+		vol = v;
+	}
 }
 
 void BonusCliquet::setMaturity(double m) {
 	BaseProduct::setMaturity(m);
-	nbTimestep = 52*(int)maturity;
+	setNbTimestep(52*(int)maturity);
 }

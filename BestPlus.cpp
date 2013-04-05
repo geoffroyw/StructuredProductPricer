@@ -9,6 +9,7 @@
 #include <boost/random.hpp>
 #include <boost/random/normal_distribution.hpp>
 #include "BestPlus.h"
+#include <stdexcept>
 
 
 using namespace std;
@@ -16,19 +17,19 @@ using namespace std;
 
 BestPlus::BestPlus(void) : BasketProduct()
 {
-	maturity = 7.0;
-	nbTimestep = 7;
-	nbSimulation = 1000;
-	nbAsj = 14;
-	performance_obj = 0.35;
-	capital = 100.0;
+	setMaturity(7.0);
+	setNbTimestep(7);
+	setNbSimulation(1000);
+	setNbAsj(14);
+	setPerformanceObj(0.35);
+	setCapital(100.0);
 
 	correlations.resize(nbAsj,nbAsj,false);
 	cholM.resize(nbAsj,nbAsj,false);
 
 	//On initialise tous les prix spots à 100
 	for(int i =0;i<nbAsj;i++) {
-		spotPrices.push_back(100.0);
+		addSpotPrice(100.0);
 	}
 
 	// Initialisation de la matriec des corrélations
@@ -266,10 +267,20 @@ void BestPlus::computeGreeks(){
 }
 
 void BestPlus::setPerformanceObj(double obj) {
-	performance_obj = obj;
+	if(obj<=0) {
+		throw out_of_range("L'objectif de performance doit être strictement positif");
+	}
+	else {
+		performance_obj = obj;
+	}
 }
 void BestPlus::setCapital(double c) {
-	capital = c;
+	if(c<=0) {
+		throw out_of_range("Le capital de départ doit être strictement positif");
+	}
+	else {
+		capital = c;
+	}
 }
 
 

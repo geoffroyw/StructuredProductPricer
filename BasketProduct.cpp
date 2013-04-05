@@ -2,6 +2,7 @@
 #include <vector>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/symmetric.hpp>
+#include <stdexcept>
 
 using namespace std;
 
@@ -39,15 +40,37 @@ void BasketProduct::cholesky() {
 }
 
 void BasketProduct::setSpotPrices(vector<double> sps) {
+	for(int i = 0; i<sps.size(); i++) {
+		if(sps[i]<=0) {
+			throw out_of_range("Les prix spots doivent être strictement positifs");
+		}
+	}
 	spotPrices = sps;
 }
 void BasketProduct::addSpotPrice(double sp) {
-	spotPrices.push_back(sp);
+	if(sp<=0) {
+		throw out_of_range("Spot price doit être strictement positif");
+	}
+	else {
+		spotPrices.push_back(sp);
+	}
 }
 void BasketProduct::setCorrelations(boost::numeric::ublas::symmetric_matrix<double, boost::numeric::ublas::lower> corr) {
+	for(int i=0;i<corr.size1();i++) {
+		for(int j=0;j<corr.size2();j++) {
+			if(abs(corr(i,j))>1) {
+				throw out_of_range("La corrélation doit être comprise entre -1 et +1");
+			}
+		}
+	}
 	correlations = corr;
 }
 
 void BasketProduct::setNbAsj(int nb) {
-	nbAsj = nb;
+	if(nb<=0) {
+		throw out_of_range("Le nombre d'ASJ doit être strictemenet positif");
+	}
+	else {
+		nbAsj = nb;
+	}
 }
