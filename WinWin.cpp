@@ -19,11 +19,11 @@ WinWin::WinWin(void) : BasketProduct()
 {
 	setNbAsj(10);
 	setMaturity(5.0);
-	setNbTimestep(52*(int)maturity);
+	setNbTimestep(2*(int)maturity);
 	setNbSimulation(1000);
 	setBarrierCoupon(5.0);
 	setFinalCoupon(10.0);
-	setHighBarrier(0.35);
+	setHighBarrier(0.02);
 	setLowBarrier(0.01);
 	setCapital(100);
 	
@@ -92,8 +92,9 @@ void WinWin::simulatePaths() {
 			}
 		}
 
-		performance = 0.0;
+		
 		for(int j=1;j<nbTimestep;j++) {
+			performance = 0.0;
 			val_prec = 0.0;
 			val = 0.0;
 			for(int i = 0; i<nbAsj;i++) {
@@ -101,7 +102,7 @@ void WinWin::simulatePaths() {
 				val_prec+=S_ts(i,j-1);
 			}
 			performance = (val-val_prec)/val_prec;
-			if((performance>=highBarrier && !highBarrierCross) || (performance<=lowBarrier && !lowBarrierCross)) {
+			if((performance>=highBarrier) || (performance<=lowBarrier)) {
 				highBarrierCross = highBarrierCross ||  performance>=highBarrier;
 				lowBarrierCross = lowBarrierCross || performance<=lowBarrier;
 				TimestepsBarrierCross.push_back(j);
@@ -110,7 +111,7 @@ void WinWin::simulatePaths() {
 
 		payoff = 0.0;
 		for(int i = 0; i<TimestepsBarrierCross.size(); i++) {
-			payoff += barrierCoupon*exp(-riskFreeRate*TimestepsBarrierCross[i]/52);
+			payoff += barrierCoupon*exp(-riskFreeRate*TimestepsBarrierCross[i]/2);
 		}
 
 		if(TimestepsBarrierCross.empty()) {
@@ -119,6 +120,7 @@ void WinWin::simulatePaths() {
 		payoff += capital*exp(-riskFreeRate*maturity);
 		payoffs[k] = payoff;
 		sum_payoffs += payoff;
+		TimestepsBarrierCross.clear();
 
 	}
 

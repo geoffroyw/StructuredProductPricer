@@ -58,10 +58,8 @@ void BestPlus::simulatePaths() {
 	double sd;
 	double vol;
 	
-	//vector<double> spot_prices(nbAsj);
 	vector<double> saved_pf_value(nbTimestep);
 	vector<double> payoffs(nbSimulation);
-	//vector<double> randVars(nbAsj);
 
 	boost::numeric::ublas::matrix<double> S_ts(nbAsj,nbTimestep);
 

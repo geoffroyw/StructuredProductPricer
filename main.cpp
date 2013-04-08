@@ -28,6 +28,7 @@ int main( int argc, char* argv[] )
 	
 	BaseProduct *p = new BestPlus();
 	(*p).price();
+	cout << "BESTPLUS\n";
 	cout << (*p).getPrice() <<"\n";
 	cout << "Inf : " << (*p).getConfidenceLowerBound() << "\n";
 	cout << "Sup : " << (*p).getConfidenceUpperBound() << "\n";
@@ -35,10 +36,10 @@ int main( int argc, char* argv[] )
 	(*p).computeGreeks();
 	cout << "\n GREEKS \n";;
 	cout << "Delta: " <<(*p).getDelta() << "\n";
-	cout << "Gamme: " <<(*p).getGamma() << "\n";
+	cout << "Gamma: " <<(*p).getGamma() << "\n";
 	cout << "Theta: " <<(*p).getTheta() << "\n";
 	cout << "Rho: " <<(*p).getRho() << "\n";
-	cout << "Vega: " <<(*p).getVega() << "\n";
+	cout << "Vega: " <<(*p).getVega() << "\n";*/
 	cout << "\n\n\n";
 	delete p;
 
@@ -46,12 +47,13 @@ int main( int argc, char* argv[] )
 	p = new BonusCliquet();
 	(*p).price();
 	(*p).computeGreeks();
+	cout << "BONUSCLIQUET\n";
 	cout << (*p).getPrice() <<"\n";
 	cout << "Inf : " << (*p).getConfidenceLowerBound() << "\n";
 	cout << "Sup : " << (*p).getConfidenceUpperBound() << "\n";
 	cout << "\n GREEKS \n";;
 	cout << "Delta: " <<(*p).getDelta() << "\n";
-	cout << "Gamme: " <<(*p).getGamma() << "\n";
+	cout << "Gamma: " <<(*p).getGamma() << "\n";
 	cout << "Theta: " <<(*p).getTheta() << "\n";
 	cout << "Rho: " <<(*p).getRho() << "\n";
 	cout << "Vega: " <<(*p).getVega() << "\n";
@@ -61,13 +63,14 @@ int main( int argc, char* argv[] )
 
 	p = new WinWin();
 	(*p).price();
+	cout << "WINWIN\n";
 	cout << (*p).getPrice() <<"\n";
 	cout << "Inf : " << (*p).getConfidenceLowerBound() << "\n";
 	cout << "Sup : " << (*p).getConfidenceUpperBound() << "\n";
 	(*p).computeGreeks();
 	cout << "\n GREEKS \n";;
 	cout << "Delta: " <<(*p).getDelta() << "\n";
-	cout << "Gamme: " <<(*p).getGamma() << "\n";
+	cout << "Gamma: " <<(*p).getGamma() << "\n";
 	cout << "Theta: " <<(*p).getTheta() << "\n";
 	cout << "Rho: " <<(*p).getRho() << "\n";
 	cout << "Vega: " <<(*p).getVega() << "\n";
