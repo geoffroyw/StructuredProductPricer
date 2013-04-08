@@ -60,6 +60,7 @@ void BasketProduct::simulateRandVars() {
 				}
 				mRandVars.push_back(temp);
 			}
+			randVars.clear();
 		}
 	}
 	return;
