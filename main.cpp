@@ -6,11 +6,24 @@
 #include "BonusCliquet.h"
 #include "WinWin.h"
 
+
 using namespace std;
 
 
-int main( int argc, const char* argv[] )
+int main( int argc, char* argv[] )
 {
+	/*QApplication app(argc,argv);
+	Ui::MainWindow ui;
+	QMainWindow *mainWindow = new QMainWindow();
+	ui.setupUi(mainWindow);
+	mainWindow->show();
+	
+
+	return app.exec();*/
+
+
+
+
 	printf( "\nHello World\n\n" );
 	
 	BaseProduct *p = new BestPlus();

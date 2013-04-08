@@ -168,27 +168,55 @@ void WinWin::simulatePaths() {
 
 void WinWin::computeGreeks(){
 	double s1,s,s2;
+	delta = 0.0;
+	gamma = 0.0;
+	vega = 0.0;
+
 	vector<double> initialSpotPrices = spotPrices;
-	vector<double> pSpotPrices(spotPrices.size());
-	vector<double> mSpotPrices(spotPrices.size());
-	for(int i=0;i<spotPrices.size();i++) {
-		pSpotPrices[i]=initialSpotPrices[i]+deltaS;
-		mSpotPrices[i]=initialSpotPrices[i]-deltaS;
+	vector<double> pSpotPrices = spotPrices;
+	vector<double> mSpotPrices = spotPrices;
+	boost::numeric::ublas::symmetric_matrix<double, boost::numeric::ublas::lower> initialCorrelations = correlations;
+	boost::numeric::ublas::symmetric_matrix<double, boost::numeric::ublas::lower> mCorrelations = correlations;
+	boost::numeric::ublas::symmetric_matrix<double, boost::numeric::ublas::lower> pCorrelations = correlations;
+
+	for(int k = 0;k<nbAsj;k++) {
+		pSpotPrices[k] += deltaS;
+		mSpotPrices[k] -= deltaS;
+		simulatePaths();
+		s = mPrice;
+		setSpotPrices(mSpotPrices);
+		simulatePaths();
+		s1 = mPrice;
+		setSpotPrices(pSpotPrices);
+		simulatePaths();
+		s2 = mPrice;
+		
+		delta += (s2-s1)/(2*deltaS);
+		gamma += (s2 - 2*s+s1)/pow(deltaS,2);
+
+		setSpotPrices(initialSpotPrices);
+		pSpotPrices = initialSpotPrices;
+		mSpotPrices = initialSpotPrices;
+
+		mCorrelations(k,k) += deltaSigma;
+		pCorrelations(k,k) -= deltaSigma;
+
+		setCorrelations(mCorrelations);
+		simulateRandVars();
+		simulatePaths();
+		s1 = mPrice;
+		setCorrelations(pCorrelations);
+		simulateRandVars();
+		simulatePaths();
+		s2 = mPrice;
+		vega += (s2-s1)/(2*deltaSigma);
+		setCorrelations(initialCorrelations);
+		simulateRandVars();
 	}
 
-	simulatePaths();
-	s = mPrice;
-	setSpotPrices(mSpotPrices);
-	simulatePaths();
-	s1 = mPrice;
-	setSpotPrices(pSpotPrices);
-	simulatePaths();
-	s2 = mPrice;
-
-	delta = (s2-s1)/(2*deltaS);
-	gamma = (s2 - 2*s+s1)/pow(deltaS,2);
-
-	setSpotPrices(initialSpotPrices);
+	delta /= nbAsj;
+	gamma /= nbAsj;
+	vega  /=nbAsj;
 
 	setMaturity(maturity-deltaT);
 	simulatePaths();
@@ -211,7 +239,7 @@ void WinWin::computeGreeks(){
 
 	setRiskFreeRate(riskFreeRate-deltaR);
 
-	boost::numeric::ublas::symmetric_matrix<double, boost::numeric::ublas::lower> initialCorrelations = correlations;
+/*	boost::numeric::ublas::symmetric_matrix<double, boost::numeric::ublas::lower> initialCorrelations = correlations;
 	boost::numeric::ublas::symmetric_matrix<double, boost::numeric::ublas::lower> mCorrelations = correlations;
 	boost::numeric::ublas::symmetric_matrix<double, boost::numeric::ublas::lower> pCorrelations = correlations;
 	for(int i =0; i<correlations.size1(); i++) {
@@ -230,7 +258,7 @@ void WinWin::computeGreeks(){
 	s2 = mPrice;
 	vega = (s2-s1)/(2*deltaSigma);
 	setCorrelations(initialCorrelations);
-	simulateRandVars();
+	simulateRandVars();*/
 }
 
 
