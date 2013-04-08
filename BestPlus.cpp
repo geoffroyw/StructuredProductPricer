@@ -39,6 +39,9 @@ BestPlus::BestPlus(void) : BasketProduct()
 	}
 
 }
+BestPlus::~BestPlus(void)
+{
+}
 
 void BestPlus::price() {
 	simulateRandVars();

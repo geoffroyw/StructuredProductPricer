@@ -3,6 +3,7 @@
 */
 
 #include <stdio.h>
+#include <vector>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/symmetric.hpp>
 #include <boost/random.hpp>
@@ -20,6 +21,9 @@ BonusCliquet::BonusCliquet(void) : BaseProduct()
 	setLowBarrier(80.0);
 	setHighBarrier(120.0);
 	setVol(0.3);
+}
+BonusCliquet::~BonusCliquet(void)
+{
 }
 
 void BonusCliquet::price() {
@@ -132,7 +136,11 @@ void BonusCliquet::computeGreeks() {
 
 	setSpotPrice(spotPrice-deltaS);
 
+	setMaturity(maturity+deltaT);
+	simulateRandVars();
 	setMaturity(maturity-deltaT);
+	setMaturity(maturity-deltaT);
+	
 	simulatePaths();
 	s1 = mPrice;
 	setMaturity(maturity+2*deltaT);
@@ -141,6 +149,7 @@ void BonusCliquet::computeGreeks() {
 	theta = -(s2-s1)/(2*deltaT);
 
 	setMaturity(maturity-deltaT);
+	simulateRandVars();
 
 	
 	setRiskFreeRate(riskFreeRate-deltaR);
