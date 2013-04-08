@@ -12,7 +12,6 @@ public:
 	virtual void price();
 	virtual void computeGreeks();
 	virtual void simulatePaths();
-	virtual void simulateRandVars();
 	void setPerformanceObj(double obj);
 	void setCapital(double c);
 	

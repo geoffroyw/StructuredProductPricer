@@ -11,8 +11,6 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/symmetric.hpp>
-#include <boost/random.hpp>
-#include <boost/random/normal_distribution.hpp>
 #include <stdexcept>
 
 using namespace std;
@@ -59,33 +57,6 @@ void WinWin::price() {
 	return;
 }
 
-void WinWin::simulateRandVars() {
-	boost::mt19937 rng; 
-	boost::normal_distribution<> nd(0.0, 1.0);
-	boost::variate_generator<boost::mt19937&, boost::normal_distribution<> > var_nor(rng, nd);
-	double temp;
-	
-	cholesky();
-	vector<double> randVars;
-
-	for(int k = 0;k<nbSimulation;k++) {
-		for(int l =0; l<nbTimestep; l++) {
-			for(int i = 0; i<nbAsj; i++) {
-				randVars.push_back(var_nor());
-			}
-			for(int i=0;i<nbAsj;i++) {
-				temp=0.0;
-				for(int j=0;j<=i;j++) {
-					temp+=randVars[j]*cholM(i,j);
-				}
-				mRandVars.push_back(temp);
-			}
-			randVars.clear();
-		}
-	}
-	return;
-}
-
 void WinWin::simulatePaths() {
 	int randVarIndex = 0;
 	double payoff = 0.0;
@@ -108,6 +79,8 @@ void WinWin::simulatePaths() {
 		highBarrierCross = false;
 		lowBarrierCross = false;
 		vector<int> TimestepsBarrierCross;
+
+
 		for(int i = 0; i<nbAsj;i++) {
 			vol = correlations(i,i);
 			r = (riskFreeRate-0.5*pow(vol,2))*delta_t;
@@ -118,6 +91,7 @@ void WinWin::simulatePaths() {
 				S_ts(i,j)= S_ts(i,j-1)*exp(r+sd*mRandVars[randVarIndex++]);
 			}
 		}
+
 		performance = 0.0;
 		for(int j=1;j<nbTimestep;j++) {
 			val_prec = 0.0;
@@ -136,14 +110,14 @@ void WinWin::simulatePaths() {
 
 		payoff = 0.0;
 		for(int i = 0; i<TimestepsBarrierCross.size(); i++) {
-			payoff+=barrierCoupon*exp(-riskFreeRate*TimestepsBarrierCross[i]/52);
+			payoff += barrierCoupon*exp(-riskFreeRate*TimestepsBarrierCross[i]/52);
 		}
 
 		if(TimestepsBarrierCross.empty()) {
 			payoff += finalCoupon*exp(-riskFreeRate*maturity);
 		}
 		payoff += capital*exp(-riskFreeRate*maturity);
-		payoffs[k]=payoff;
+		payoffs[k] = payoff;
 		sum_payoffs += payoff;
 
 	}
@@ -197,7 +171,11 @@ void WinWin::computeGreeks(){
 		setSpotPrices(initialSpotPrices);
 		pSpotPrices = initialSpotPrices;
 		mSpotPrices = initialSpotPrices;
+	}
+	delta /= nbAsj;
+	gamma /= nbAsj;
 
+	for(int k = 0;k<nbAsj;k++) {
 		mCorrelations(k,k) += deltaSigma;
 		pCorrelations(k,k) -= deltaSigma;
 
@@ -212,10 +190,10 @@ void WinWin::computeGreeks(){
 		vega += (s2-s1)/(2*deltaSigma);
 		setCorrelations(initialCorrelations);
 		simulateRandVars();
+		mCorrelations = initialCorrelations;
+		pCorrelations = initialCorrelations;
 	}
-
-	delta /= nbAsj;
-	gamma /= nbAsj;
+	
 	vega  /=nbAsj;
 
 	setMaturity(maturity-deltaT);

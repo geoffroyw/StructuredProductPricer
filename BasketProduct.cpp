@@ -2,6 +2,8 @@
 #include <vector>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/symmetric.hpp>
+#include <boost/random.hpp>
+#include <boost/random/normal_distribution.hpp>
 #include <stdexcept>
 
 using namespace std;
@@ -38,6 +40,31 @@ void BasketProduct::cholesky() {
 		}
 	}
 }
+
+void BasketProduct::simulateRandVars() {
+	boost::mt19937 rng; 
+	boost::normal_distribution<> nd(0.0, 1.0);
+	boost::variate_generator<boost::mt19937&, boost::normal_distribution<> > var_nor(rng, nd);
+	double temp;
+	
+	cholesky();
+	vector<double> randVars;
+
+	for(int k = 0;k<nbSimulation;k++) {
+		for(int l =0; l<nbTimestep; l++) {
+			for(int i = 0; i<nbAsj; i++) {
+				randVars.push_back(var_nor());
+				temp = 0.0;
+				for(int j=0;j<=i;j++) {
+					temp+=randVars[j]*cholM(i,j);
+				}
+				mRandVars.push_back(temp);
+			}
+		}
+	}
+	return;
+}
+
 
 void BasketProduct::setSpotPrices(vector<double> sps) {
 	for(int i = 0; i<sps.size(); i++) {

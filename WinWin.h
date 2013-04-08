@@ -19,7 +19,6 @@ public:
 	virtual void price();
 	virtual void computeGreeks();
 	virtual void simulatePaths();
-	virtual void simulateRandVars();
 	void setCapital(double c);
 	void setFinalCoupon(double c);
 	void setBarrierCoupon(double c);

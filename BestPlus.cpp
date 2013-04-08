@@ -6,8 +6,6 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/symmetric.hpp>
-#include <boost/random.hpp>
-#include <boost/random/normal_distribution.hpp>
 #include "BestPlus.h"
 #include <stdexcept>
 
@@ -173,33 +171,6 @@ void BestPlus::simulatePaths() {
 	return;
 }
 
-void BestPlus::simulateRandVars() {
-	boost::mt19937 rng; 
-	boost::normal_distribution<> nd(0.0, 1.0);
-	boost::variate_generator<boost::mt19937&, boost::normal_distribution<> > var_nor(rng, nd);
-	double temp;
-	
-	cholesky();
-
-
-	for(int k = 0;k<nbSimulation;k++) {
-		for(int l =0; l<nbTimestep; l++) {
-			vector<double> randVars;
-			for(int i = 0; i<nbAsj; i++) {
-				randVars.push_back(var_nor());
-			}
-			for(int i=0;i<nbAsj;i++) {
-				temp=0.0;
-				for(int j=0;j<=i;j++) {
-					temp+=randVars[j]*cholM(i,j);
-				}
-				mRandVars.push_back(temp);
-			}
-		}
-	}
-	return;
-}
-
 void BestPlus::computeGreeks(){
 	double s1,s,s2;
 
@@ -232,7 +203,11 @@ void BestPlus::computeGreeks(){
 		setSpotPrices(initialSpotPrices);
 		pSpotPrices = initialSpotPrices;
 		mSpotPrices = initialSpotPrices;
+	}
+	delta /= nbAsj;
+	gamma /= nbAsj;
 
+	for(int k = 0;k<nbAsj;k++) {
 		mCorrelations(k,k) += deltaSigma;
 		pCorrelations(k,k) -= deltaSigma;
 
@@ -247,10 +222,10 @@ void BestPlus::computeGreeks(){
 		vega += (s2-s1)/(2*deltaSigma);
 		setCorrelations(initialCorrelations);
 		simulateRandVars();
+		mCorrelations = initialCorrelations;
+		pCorrelations = initialCorrelations;
 	}
-
-	delta /= nbAsj;
-	gamma /= nbAsj;
+	
 	vega  /=nbAsj;
 
 	setMaturity(maturity-deltaT);
