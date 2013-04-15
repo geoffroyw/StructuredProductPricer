@@ -26,7 +26,7 @@ protected:
 	
 public:
 	BaseProduct(void);
-	~BaseProduct(void);
+	virtual ~BaseProduct(void);
 	double getConfidenceLowerBound();
 	double getConfidenceUpperBound();
 	virtual void price();

@@ -1,5 +1,6 @@
 ﻿#include "BaseProduct.h"
 #include <stdexcept>
+#include <cmath>
 
 BaseProduct::BaseProduct(void)
 {
@@ -35,7 +36,7 @@ double BaseProduct::getConfidenceUpperBound() {
 void BaseProduct::price(){}
 void BaseProduct::computeGreeks() {}
 void BaseProduct::simulatePaths(){}
-void BaseProduct::simulateRandVars(){};
+void BaseProduct::simulateRandVars(){}
 
 double BaseProduct::getPrice() {
 	return mPrice;

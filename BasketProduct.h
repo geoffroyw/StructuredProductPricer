@@ -17,7 +17,7 @@ protected:
 
 public:
 	BasketProduct(void);
-	~BasketProduct(void);
+	virtual ~BasketProduct(void);
 	virtual void price()=0;
 	virtual void computeGreeks()=0;
 	virtual void simulatePaths()=0;

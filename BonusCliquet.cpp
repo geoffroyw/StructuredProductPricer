@@ -119,58 +119,6 @@ void BonusCliquet::simulateRandVars() {
 }
 
 
-//Calcul des Grecques par différence divisées
-void BonusCliquet::computeGreeks() {
-	double s1,s,s2;
-	simulatePaths();
-	s = mPrice;
-	setSpotPrice(spotPrice-deltaS);
-	simulatePaths();
-	s1 = mPrice;
-	setSpotPrice(spotPrice+2*deltaS);
-	simulatePaths();
-	s2 = mPrice;
-
-	delta = (s2-s1)/(2*deltaS);
-	gamma = (s2 - 2*s+s1)/pow(deltaS,2);
-
-	setSpotPrice(spotPrice-deltaS);
-
-	setMaturity(maturity+deltaT);
-	simulateRandVars();
-	setMaturity(maturity-deltaT);
-	setMaturity(maturity-deltaT);
-	
-	simulatePaths();
-	s1 = mPrice;
-	setMaturity(maturity+2*deltaT);
-	simulatePaths();
-	s2 = mPrice;
-	theta = -(s2-s1)/(2*deltaT);
-
-	setMaturity(maturity-deltaT);
-	simulateRandVars();
-
-	
-	setRiskFreeRate(riskFreeRate-deltaR);
-	simulatePaths();
-	s1 = mPrice;
-	setRiskFreeRate(riskFreeRate+2*deltaR);
-	simulatePaths();
-	s2 = mPrice;
-	rho = (s2-s1)/(2*deltaR);
-
-	setRiskFreeRate(riskFreeRate-deltaR);
-
-	setVol(vol-deltaSigma);
-	simulatePaths();
-	s1 = mPrice;
-	setVol(vol+2*deltaSigma);
-	simulatePaths();
-	s2 = mPrice;
-	vega = (s2-s1)/(2*deltaSigma);
-	setVol(vol-deltaSigma);
-}
 
 
 

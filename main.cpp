@@ -13,7 +13,7 @@ using namespace std;
 int main( int argc, char* argv[] )
 {
 	printf( "\nHello World\n\n" );
-	
+
 	BaseProduct *p = new BestPlus();
 	(*p).price();
 	cout << "BESTPLUS\n";

@@ -8,7 +8,7 @@ private:
 	double capital;
 public:
 	BestPlus(void);
-	~BestPlus(void);
+	virtual ~BestPlus(void);
 	virtual void price();
 	virtual void computeGreeks();
 	virtual void simulatePaths();
