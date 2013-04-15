@@ -1,4 +1,4 @@
-/**
+ï»¿/**
   Pricer d'un BestPlus 49
 */
 
@@ -25,12 +25,12 @@ BestPlus::BestPlus(void) : BasketProduct()
 	correlations.resize(nbAsj,nbAsj,false);
 	cholM.resize(nbAsj,nbAsj,false);
 
-	//On initialise tous les prix spots à 100
+	//On initialise tous les prix spots Ã  100
 	for(int i =0;i<nbAsj;i++) {
 		addSpotPrice(100.0);
 	}
 
-	// Initialisation de la matriec des corrélations
+	// Initialisation de la matriec des corrÃ©lations
 	for(unsigned i=0;i<correlations.size1();++i) {
 		for(unsigned j=0;j<i;++j) {
 			correlations(i,j) = 0.05;
@@ -66,7 +66,7 @@ void BestPlus::simulatePaths() {
 
 	boost::numeric::ublas::matrix<double> S_ts(nbAsj,nbTimestep);
 
-	//Première valeur sauvegardée du portefeuille :  moyenne des spots
+	//PremiÃ¨re valeur sauvegardÃ©e du portefeuille :  moyenne des spots
 	for(int i=0;i<spotPrices.size();i++) {
 		saved_pf_value[0]+=spotPrices[i];
 	}
@@ -122,7 +122,7 @@ void BestPlus::simulatePaths() {
 				performance(best_perf2_index,l)=performance(best_perf2_index,j);
 			}
 
-			//Calcul de la valeur du PF sécurisée
+			//Calcul de la valeur du PF sÃ©curisÃ©e
 			saved_pf_value[j]=0;
 			for(int i=0;i<nbAsj;i++) {
 				saved_pf_value[j]+=S_ts(i,j);
@@ -274,7 +274,7 @@ void BestPlus::computeGreeks(){
 
 void BestPlus::setPerformanceObj(double obj) {
 	if(obj<=0) {
-		throw out_of_range("L'objectif de performance doit être strictement positif");
+		throw out_of_range("L'objectif de performance doit Ãªtre strictement positif");
 	}
 	else {
 		performance_obj = obj;
@@ -282,7 +282,7 @@ void BestPlus::setPerformanceObj(double obj) {
 }
 void BestPlus::setCapital(double c) {
 	if(c<=0) {
-		throw out_of_range("Le capital de départ doit être strictement positif");
+		throw out_of_range("Le capital de dÃ©part doit Ãªtre strictement positif");
 	}
 	else {
 		capital = c;

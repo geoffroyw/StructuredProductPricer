@@ -1,4 +1,4 @@
-#include "BaseProduct.h"
+ï»¿#include "BaseProduct.h"
 #include <stdexcept>
 
 BaseProduct::BaseProduct(void)
@@ -59,7 +59,7 @@ double BaseProduct::getVega() {
 
 void BaseProduct::setMaturity(double m) {
 	if(m<=0) {
-		throw std::out_of_range("La maturité doit être strictement positive");
+		throw std::out_of_range("La maturitÃ© doit Ãªtre strictement positive");
 	}
 	else {
 		maturity = m;
@@ -67,7 +67,7 @@ void BaseProduct::setMaturity(double m) {
 }
 void BaseProduct::setNbTimestep(int nb) {
 	if(nb<=0) {
-		throw std::out_of_range("Le nombre de pas de temps doit être strictement positif");
+		throw std::out_of_range("Le nombre de pas de temps doit Ãªtre strictement positif");
 	}
 	else {
 		nbTimestep =nb;
@@ -75,7 +75,7 @@ void BaseProduct::setNbTimestep(int nb) {
 }
 void BaseProduct::setNbSimulation(int nb) {
 	if(nb<=0) {
-		throw std::out_of_range("Le nombre de simulation doit être strictement positif");
+		throw std::out_of_range("Le nombre de simulation doit Ãªtre strictement positif");
 	}
 	else {
 		nbSimulation = nb;
@@ -87,7 +87,7 @@ void BaseProduct::setRiskFreeRate(double r) {
 
 void BaseProduct::setDeltaS(double ds){
 	if(ds==0) {
-		throw std::invalid_argument("ds doit être différent de zéro");
+		throw std::invalid_argument("ds doit Ãªtre diffÃ©rent de zÃ©ro");
 	}
 	else {
 		deltaS=std::abs(ds);
@@ -96,7 +96,7 @@ void BaseProduct::setDeltaS(double ds){
 
 void BaseProduct::setDeltaT(double dt){
 	if(dt==0) {
-		throw std::invalid_argument("dt doit être différent de zéro");
+		throw std::invalid_argument("dt doit Ãªtre diffÃ©rent de zÃ©ro");
 	}
 	else {
 		deltaT = std::abs(dt);
@@ -104,7 +104,7 @@ void BaseProduct::setDeltaT(double dt){
 }
 void BaseProduct::setDeltaR(double dr){
 	if(dr==0) {
-		throw std::invalid_argument("dr doit être différent de zéro");
+		throw std::invalid_argument("dr doit Ãªtre diffÃ©rent de zÃ©ro");
 	}
 	else {
 		deltaR = std::abs(dr);
@@ -112,7 +112,7 @@ void BaseProduct::setDeltaR(double dr){
 }
 void BaseProduct::setDeltaSigma(double ds){
 	if(ds==0) {
-		throw std::invalid_argument("dsigma doit être différent de zéro");
+		throw std::invalid_argument("dsigma doit Ãªtre diffÃ©rent de zÃ©ro");
 	}
 	else {
 		deltaSigma = std::abs(ds);

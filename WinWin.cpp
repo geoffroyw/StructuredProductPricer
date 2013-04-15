@@ -1,9 +1,9 @@
-/*
+ï»¿/*
 	Pricing d'un Win-Win 55
-	Produit à capital garanti, composé d'un basket de 10 titres, avec deux barrière
-	activantes : une à la hausse et une à la baisse suivant le rendement du
-	portefeuille, versant dans ce cas là un coupon.
-	Dans le cas où aucune barrière n'est franchie, le client touche un coupon final
+	Produit Ã  capital garanti, composÃ© d'un basket de 10 titres, avec deux barriÃ¨re
+	activantes : une Ã  la hausse et une Ã  la baisse suivant le rendement du
+	portefeuille, versant dans ce cas lÃ  un coupon.
+	Dans le cas oÃ¹ aucune barriÃ¨re n'est franchie, le client touche un coupon final
 */
 
 #include "WinWin.h"
@@ -30,12 +30,12 @@ WinWin::WinWin(void) : BasketProduct()
 	correlations.resize(nbAsj,nbAsj,false);
 	cholM.resize(nbAsj,nbAsj,false);
 
-	//On initialise tous les prix spots à 100
+	//On initialise tous les prix spots Ã  100
 	for(int i =0;i<nbAsj;i++) {
 		addSpotPrice(100.0);
 	}
 
-	// Initialisation de la matriec des corrélations
+	// Initialisation de la matriec des corrÃ©lations
 	for(unsigned i=0;i<correlations.size1();++i) {
 		for(unsigned j=0;j<i;++j) {
 			correlations(i,j) = 0.05;
@@ -244,7 +244,7 @@ void WinWin::computeGreeks(){
 
 void WinWin::setBarrierCoupon(double c) {
 	if(c<=0) {
-		throw out_of_range("Le coupon en cas de croisement d'une barrière doit être strictement positif");
+		throw out_of_range("Le coupon en cas de croisement d'une barriÃ¨re doit Ãªtre strictement positif");
 	}
 	else {
 		barrierCoupon = c;
@@ -253,7 +253,7 @@ void WinWin::setBarrierCoupon(double c) {
 
 void WinWin::setFinalCoupon(double c) {
 	if(c<=0) {
-		throw out_of_range("Le coupon final doit être strictement positif");
+		throw out_of_range("Le coupon final doit Ãªtre strictement positif");
 	}
 	else {
 		finalCoupon = c;
@@ -262,7 +262,7 @@ void WinWin::setFinalCoupon(double c) {
 
 void WinWin::setHighBarrier(double b) {
 	if(b<=0) {
-		throw out_of_range("La barrière haute doit être strictement positive");
+		throw out_of_range("La barriÃ¨re haute doit Ãªtre strictement positive");
 	}
 	else {
 		highBarrier= b;
@@ -271,7 +271,7 @@ void WinWin::setHighBarrier(double b) {
 
 void WinWin::setLowBarrier(double b) {
 	if(b<=0) {
-		throw out_of_range("La barrière basse doit être strictement positive");
+		throw out_of_range("La barriÃ¨re basse doit Ãªtre strictement positive");
 	}
 	else {
 		lowBarrier = b;
@@ -280,7 +280,7 @@ void WinWin::setLowBarrier(double b) {
 
 void WinWin::setCapital(double c) {
 	if(c<=0) {
-		throw out_of_range("Le capitaldoit être strictement positif");
+		throw out_of_range("Le capitaldoit Ãªtre strictement positif");
 	}
 	else {
 		capital = c;

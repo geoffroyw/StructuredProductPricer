@@ -1,4 +1,4 @@
-#include "BasketProduct.h"
+ï»¿#include "BasketProduct.h"
 #include <vector>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/symmetric.hpp>
@@ -17,7 +17,7 @@ BasketProduct::~BasketProduct(void)
 {
 }
 
-// Décomposition de Cholesky
+// DÃ©composition de Cholesky
 void BasketProduct::cholesky() {
 	double x;
 	for(unsigned i=0;i<cholM.size1();++i) {
@@ -70,14 +70,14 @@ void BasketProduct::simulateRandVars() {
 void BasketProduct::setSpotPrices(vector<double> sps) {
 	for(int i = 0; i<sps.size(); i++) {
 		if(sps[i]<=0) {
-			throw out_of_range("Les prix spots doivent être strictement positifs");
+			throw out_of_range("Les prix spots doivent Ãªtre strictement positifs");
 		}
 	}
 	spotPrices = sps;
 }
 void BasketProduct::addSpotPrice(double sp) {
 	if(sp<=0) {
-		throw out_of_range("Spot price doit être strictement positif");
+		throw out_of_range("Spot price doit Ãªtre strictement positif");
 	}
 	else {
 		spotPrices.push_back(sp);
@@ -87,7 +87,7 @@ void BasketProduct::setCorrelations(boost::numeric::ublas::symmetric_matrix<doub
 	for(int i=0;i<corr.size1();i++) {
 		for(int j=0;j<corr.size2();j++) {
 			if(abs(corr(i,j))>1) {
-				throw out_of_range("La corrélation doit être comprise entre -1 et +1");
+				throw out_of_range("La corrÃ©lation doit Ãªtre comprise entre -1 et +1");
 			}
 		}
 	}
@@ -96,7 +96,7 @@ void BasketProduct::setCorrelations(boost::numeric::ublas::symmetric_matrix<doub
 
 void BasketProduct::setNbAsj(int nb) {
 	if(nb<=0) {
-		throw out_of_range("Le nombre d'ASJ doit être strictemenet positif");
+		throw out_of_range("Le nombre d'ASJ doit Ãªtre strictemenet positif");
 	}
 	else {
 		nbAsj = nb;
