@@ -12,7 +12,7 @@ private:
 
 public:
 	BonusCliquet(void);
-	~BonusCliquet(void);
+	virtual ~BonusCliquet(void);
 	virtual void price();
 	virtual void computeGreeks();
 	virtual void simulatePaths();

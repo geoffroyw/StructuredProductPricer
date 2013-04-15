@@ -13,7 +13,7 @@ private:
 	double barrierCoupon;
 public:
 	WinWin(void);
-	~WinWin(void);
+	virtual ~WinWin(void);
 	void setHighBarrier(double b);
 	void setLowBarrier(double b);
 	virtual void price();

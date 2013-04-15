@@ -1,4 +1,4 @@
-/**
+ï»¿/**
 	Pricing d'un Bonus Cliquet
 */
 
@@ -119,7 +119,7 @@ void BonusCliquet::simulateRandVars() {
 }
 
 
-//Calcul des Grecques par différence divisées
+//Calcul des Grecques par diffï¿½rence divisï¿½es
 void BonusCliquet::computeGreeks() {
 	double s1,s,s2;
 	simulatePaths();
@@ -176,7 +176,7 @@ void BonusCliquet::computeGreeks() {
 
 void BonusCliquet::setSpotPrice(double price) {
 	if(price<=0) {
-		throw out_of_range("Le prix Spot doit être strictement positif");
+		throw out_of_range("Le prix Spot doit ï¿½tre strictement positif");
 	}
 	else {
 		spotPrice = price;
@@ -185,7 +185,7 @@ void BonusCliquet::setSpotPrice(double price) {
 
 void BonusCliquet::setLowBarrier(double b) {
 	if(b<=0) {
-		throw out_of_range("La barrière inférieure doit être strictement positive");
+		throw out_of_range("La barriï¿½re infï¿½rieure doit ï¿½tre strictement positive");
 	}
 	else {
 		lowBarrier=b;
@@ -194,7 +194,7 @@ void BonusCliquet::setLowBarrier(double b) {
 
 void BonusCliquet::setHighBarrier(double b) {
 	if(b<=0) {
-		throw out_of_range("La barrière supérieure doit être strictement positive");
+		throw out_of_range("La barriï¿½re supï¿½rieure doit ï¿½tre strictement positive");
 	}
 	else {
 		highBarrier = b;
@@ -203,7 +203,7 @@ void BonusCliquet::setHighBarrier(double b) {
 
 void BonusCliquet::setVol(double v) {
 	if(v<0 || v>1) {
-		throw out_of_range("La volatilité doit être comprise entre 0 et 1");
+		throw out_of_range("La volatilitï¿½ doit ï¿½tre comprise entre 0 et 1");
 	}
 	else {
 		vol = v;
