@@ -1,5 +1,6 @@
 ﻿#include "BaseProduct.h"
 #include <stdexcept>
+#include <cmath>
 
 BaseProduct::BaseProduct(void)
 {
