@@ -202,8 +202,8 @@ void BestPlus::computeGreeks(){
 		gamma += (s2 - 2*s+s1)/pow(deltaS,2);
 
 		setSpotPrices(initialSpotPrices);
-		pSpotPrices = initialSpotPrices;
-		mSpotPrices = initialSpotPrices;
+		pSpotPrices[k] -= deltaS;
+		mSpotPrices[k] += deltaS;
 	}
 	delta /= nbAsj;
 	gamma /= nbAsj;

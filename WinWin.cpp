@@ -242,12 +242,6 @@ void WinWin::computeGreeks(){
 }
 
 
-/*(5.0);
-	setFinalCoupon(10.0);
-	setHighBarrier(0.35);
-	setLowBarrier(0.01);
-	setCapital(100);*/
-
 void WinWin::setBarrierCoupon(double c) {
 	if(c<=0) {
 		throw out_of_range("Le coupon en cas de croisement d'une barrière doit être strictement positif");
