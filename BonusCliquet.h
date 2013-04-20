@@ -17,6 +17,7 @@ public:
 	virtual void computeGreeks();
 	virtual void simulatePaths();
 	virtual void simulateRandVars();
+	virtual void simulatePseudoRandVars();
 	void setSpotPrice(double price);
 	void setLowBarrier(double barrier);
 	void setHighBarrier(double barrier);

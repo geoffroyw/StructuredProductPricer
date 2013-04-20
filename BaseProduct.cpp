@@ -1,6 +1,7 @@
 ﻿#include "BaseProduct.h"
 #include <stdexcept>
 #include <cmath>
+#include "SimulationType.h"
 
 BaseProduct::BaseProduct(void)
 {
@@ -19,7 +20,7 @@ BaseProduct::BaseProduct(void)
 	setDeltaR(0.001);
 	setDeltaSigma(0.001);
 	setDeltaT(0.001);
-
+	simulationType = SimulationType::MonteCarlo;
 }
 
 
@@ -118,4 +119,27 @@ void BaseProduct::setDeltaSigma(double ds){
 	else {
 		deltaSigma = std::abs(ds);
 	}
+}
+
+void BaseProduct::setSimulationType(SimulationType s) {
+	simulationType = s;
+}
+
+SimulationType BaseProduct::getSimulationType() {
+	return simulationType;
+}
+
+double BaseProduct::FaureBase2(int n) {
+	double f(0.0), sb(0.5);
+	int i, n1, n2;
+	n1 = n;
+	do {
+		n1 = (int)n1/2;
+		i = n1-n2*2;
+		f += sb*i;
+		sb /=2;
+		n1 = n2;
+	}while(n1>0);
+
+	return f;
 }

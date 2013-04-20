@@ -66,6 +66,29 @@ void BasketProduct::simulateRandVars() {
 	return;
 }
 
+void BasketProduct::simulatePseudoRandVars() {
+	double temp;
+	int randVarIndex = 1;
+
+	cholesky();
+	vector<double> randVars;
+
+	for(int k = 0;k<nbSimulation;k++) {
+		for(int l =0; l<nbTimestep; l++) {
+			for(int i = 0; i<nbAsj; i++) {
+				randVars.push_back(FaureBase2(randVarIndex++));
+				temp = 0.0;
+				for(int j=0;j<=i;j++) {
+					temp+=randVars[j]*cholM(i,j);
+				}
+				mRandVars.push_back(temp);
+			}
+			randVars.clear();
+		}
+	}
+	return;
+}
+
 
 void BasketProduct::setSpotPrices(vector<double> sps) {
 	for(int i = 0; i<sps.size(); i++) {

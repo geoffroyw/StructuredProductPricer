@@ -1,6 +1,7 @@
 #ifndef BASEPRODUCT_H
 #define BASEPRODUCT_H
 #include <vector>
+#include "SimulationType.h"
 
 class BaseProduct
 {
@@ -23,7 +24,13 @@ protected:
 	double deltaR;
 	double deltaSigma;
 	double deltaT;
+
+	SimulationType simulationType;
 	
+	double FaureBase2(int n);
+
+
+
 public:
 	BaseProduct(void);
 	virtual ~BaseProduct(void);
@@ -33,6 +40,7 @@ public:
 	virtual void computeGreeks()=0;
 	virtual void simulatePaths()=0;
 	virtual void simulateRandVars()=0;
+	virtual void simulatePseudoRandVars()=0;
 	double getPrice();
 	double getDelta();
 	double getGamma();
@@ -47,6 +55,8 @@ public:
 	void setDeltaT(double dt);
 	void setDeltaR(double dr);
 	void setDeltaSigma(double ds);
+	SimulationType getSimulationType();
+	void setSimulationType(SimulationType type);
 };
 
 #endif

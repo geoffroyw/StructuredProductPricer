@@ -22,6 +22,7 @@ public:
 	virtual void computeGreeks()=0;
 	virtual void simulatePaths()=0;
 	virtual void simulateRandVars();
+	virtual void simulatePseudoRandVars();
 	void setNbAsj(int nb);
 	void setSpotPrices(std::vector<double> spotPrices);
 	void addSpotPrice(double spotPrice);

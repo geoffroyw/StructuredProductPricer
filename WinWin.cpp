@@ -52,7 +52,12 @@ WinWin::~WinWin(void)
 
 
 void WinWin::price() {
-	simulateRandVars();
+	if(simulationType == SimulationType::MonteCarlo || simulationType == SimulationType::VarAntithetique) {
+		simulateRandVars();
+	}
+	else {
+		simulatePseudoRandVars();
+	}
 	simulatePaths();
 	return;
 }
@@ -182,16 +187,31 @@ void WinWin::computeGreeks(){
 		pCorrelations(k,k) -= deltaSigma;
 
 		setCorrelations(mCorrelations);
-		simulateRandVars();
+		if(simulationType == SimulationType::MonteCarlo || simulationType == SimulationType::VarAntithetique) {
+			simulateRandVars();
+		}
+		else {
+			simulatePseudoRandVars();
+		}
 		simulatePaths();
 		s1 = mPrice;
 		setCorrelations(pCorrelations);
-		simulateRandVars();
+		if(simulationType == SimulationType::MonteCarlo || simulationType == SimulationType::VarAntithetique) {
+			simulateRandVars();
+		}
+		else {
+			simulatePseudoRandVars();
+		}
 		simulatePaths();
 		s2 = mPrice;
 		vega += (s2-s1)/(2*deltaSigma);
 		setCorrelations(initialCorrelations);
-		simulateRandVars();
+		if(simulationType == SimulationType::MonteCarlo || simulationType == SimulationType::VarAntithetique) {
+			simulateRandVars();
+		}
+		else {
+			simulatePseudoRandVars();
+		}
 		mCorrelations = initialCorrelations;
 		pCorrelations = initialCorrelations;
 	}
@@ -218,27 +238,6 @@ void WinWin::computeGreeks(){
 	rho = (s2-s1)/(2*deltaR);
 
 	setRiskFreeRate(riskFreeRate-deltaR);
-
-/*	boost::numeric::ublas::symmetric_matrix<double, boost::numeric::ublas::lower> initialCorrelations = correlations;
-	boost::numeric::ublas::symmetric_matrix<double, boost::numeric::ublas::lower> mCorrelations = correlations;
-	boost::numeric::ublas::symmetric_matrix<double, boost::numeric::ublas::lower> pCorrelations = correlations;
-	for(int i =0; i<correlations.size1(); i++) {
-		mCorrelations(i,i)=initialCorrelations(i,i)-deltaSigma;
-		pCorrelations(i,i)=initialCorrelations(i,i)+deltaSigma;
-	}
-
-
-	setCorrelations(mCorrelations);
-	simulateRandVars();
-	simulatePaths();
-	s1 = mPrice;
-	setCorrelations(pCorrelations);
-	simulateRandVars();
-	simulatePaths();
-	s2 = mPrice;
-	vega = (s2-s1)/(2*deltaSigma);
-	setCorrelations(initialCorrelations);
-	simulateRandVars();*/
 }
 
 
