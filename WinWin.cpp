@@ -12,6 +12,7 @@
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/symmetric.hpp>
 #include <stdexcept>
+#include <boost/format.hpp>
 
 using namespace std;
 
@@ -36,12 +37,78 @@ WinWin::WinWin(void) : BasketProduct()
 	}
 
 	// Initialisation de la matriec des corrélations
-	for(unsigned i=0;i<correlations.size1();++i) {
+	/*for(unsigned i=0;i<correlations.size1();++i) {
 		for(unsigned j=0;j<i;++j) {
 			correlations(i,j) = 0.05;
 		}
 		correlations(i,i)=0.3;
-	}
+	}*/
+
+
+	correlations(0,0) = 20/100.0;
+	
+correlations(1,0) = 5/100.0;
+correlations(1,1) = 21/100.0;
+
+correlations(2,0) = 7/100.0;
+correlations(2,1) = 3/100.0;
+correlations(2,2) = 22/100.0;
+
+correlations(3,0) = 12/100.0;
+correlations(3,1) = 1/100.0;
+correlations(3,2) = 8/100.0;
+correlations(3,3) = 23/100.0;
+
+correlations(4,0) = 4/100.0;
+correlations(4,1) = 2/100.0;
+correlations(4,2) = 8/100.0;
+correlations(4,3) = 7/100.0;
+correlations(4,4) = 24/100.0;
+
+correlations(5,0) = 6/100.0;
+correlations(5,1) = 9/100.0;
+correlations(5,2) = 12/100.0;
+correlations(5,3) = 10/100.0;
+correlations(5,4) = 1/100.0;
+correlations(5,5) = 25/100.0;
+
+correlations(6,0) = 2/100.0;
+correlations(6,1) = 4/100.0;
+correlations(6,2) = 3/100.0;
+correlations(6,3) = 9/100.0;
+correlations(6,4) = 2/100.0;
+correlations(6,5) = 5/100.0;
+correlations(6,6) = 26/100.0;
+
+correlations(7,0) = 1/100.0;
+correlations(7,1) = 2/100.0;
+correlations(7,2) = 9/100.0;
+correlations(7,3) = 3/100.0;
+correlations(7,4) = 4/100.0;
+correlations(7,5) = 9/100.0;
+correlations(7,6) = 7/100.0;
+correlations(7,7) = 35/100.0;
+
+correlations(8,0) = 1/100.0;
+correlations(8,1) = 9/100.0;
+correlations(8,2) = 2/100.0;
+correlations(8,3) = 3/100.0;
+correlations(8,4) = 8/100.0;
+correlations(8,5) = 9/100.0;
+correlations(8,6) = 3/100.0;
+correlations(8,7) = 8/100.0;
+correlations(8,8) = 28/100.0;
+
+correlations(9,0) = 1/100.0;
+correlations(9,1) = 3/100.0;
+correlations(9,2) = 2/100.0;
+correlations(9,3) = 3/100.0;
+correlations(9,4) = 9/100.0;
+correlations(9,5) = 11/100.0;
+correlations(9,6) = 7/100.0;
+correlations(9,7) = 8/100.0;
+correlations(9,8) = 0/100.0;
+correlations(9,9) = 29/100.0;
 	
 }
 
