@@ -25,9 +25,11 @@ protected:
 	double deltaSigma;
 	double deltaT;
 
+	double moro_normSInv(double u);
+	double FaureBase2(int n);
 	SimulationType simulationType;
 	
-	double FaureBase2(int n);
+	
 
 
 
@@ -57,6 +59,7 @@ public:
 	void setDeltaSigma(double ds);
 	SimulationType getSimulationType();
 	void setSimulationType(SimulationType type);
+	
 };
 
 #endif

@@ -141,5 +141,51 @@ double BaseProduct::FaureBase2(int n) {
 		n1 = n2;
 	}while(n1>0);
 
-	return f;
+	return moro_normSInv(f);
+}
+
+// Calculate the Normal Standard numbers given u, the associated uniform number (0,1) 
+double BaseProduct::moro_normSInv(double u) {
+	double c1, c2, c3, c4, c5, c6, c7, c8, c9;
+	double x, r;
+	double a[4]; 
+	a[0] = 2.50662823884;
+	a[1] = -18.61500062529;
+	a[2] = 41.39119773534;
+	a[3] -25.44106049637;
+	double b[4];
+	b[0] = -8.4735109309;
+	b[1] = 23.08336743743;
+	b[2] = -21.06224101826;
+	b[3] = 3.13082909833;
+
+	c1 = 0.337475482272615;
+	c2 = 0.976169019091719;
+	c3 = 2.76438810333863E-02;
+	c4 = 2.76438810333863E-02;
+    c5 = 3.8405729373609E-03;
+    c6 = 3.951896511919E-04;
+    c7 = 3.21767881768E-05;
+    c8 = 2.888167364E-07;
+    c9 = 3.960315187E-07;
+
+	x = u - 0.5;
+
+	if(std::abs(x) < 0.42) {
+		r = x*x;
+		r = x * (((a[3] * r + a[2]) * r + a[1]) * r + a[0]) / ((((b[3]* r + b[2]) * r + b[1]) * r + b[0]) * r + 1);
+	}
+	else {
+		if(x>0) {
+			r = log(-log(1-u));
+		}
+		if(x<=0) {
+			r = log(-log(u));
+		}
+		r = c1 + r * (c2 + r * (c3 + r * (c4 + r * (c5 + r * (c6 + r * (c7 + r * (c8 + r * c9)))))));
+		if(x<=0) {
+			r = -r;
+		}
+	}
+	return r;
 }

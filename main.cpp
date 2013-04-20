@@ -61,6 +61,9 @@ int main( int argc, char* argv[] )
 	delete p;*/
 
 
+	
+
+
 	p = new WinWin();
 	(*p).setSimulationType(SimulationType::MonteCarlo);
 	(*p).price();
