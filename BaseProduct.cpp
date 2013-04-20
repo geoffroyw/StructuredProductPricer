@@ -134,7 +134,7 @@ double BaseProduct::FaureBase2(int n) {
 	int i, n1, n2;
 	n1 = n;
 	do {
-		n1 = (int)n1/2;
+		n2 = (int)n1/2;
 		i = n1-n2*2;
 		f += sb*i;
 		sb /=2;
