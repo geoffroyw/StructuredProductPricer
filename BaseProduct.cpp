@@ -1,6 +1,7 @@
 ﻿#include "BaseProduct.h"
 #include <stdexcept>
 #include <cmath>
+#include <ctime>
 #include "SimulationType.h"
 
 BaseProduct::BaseProduct(void)
@@ -129,6 +130,21 @@ SimulationType BaseProduct::getSimulationType() {
 	return simulationType;
 }
 
+
+double BaseProduct::varNorm() {
+	double v1, v2, s, u1, u2;
+	s = 2;
+	while(s>1) {
+		u1 = rand() / double(RAND_MAX);
+		u2 = rand() / double(RAND_MAX);
+		v1 = 2*u1 - 1;
+		v2 = 2*u2 - 1;
+		s = v1*v1+v2*v2;
+	}
+	return sqrt(-2*log(s)/s)*v1;
+
+}
+
 double BaseProduct::FaureBase2(int n) {
 	double f(0.0), sb(0.5);
 	int i, n1, n2;
@@ -152,7 +168,7 @@ double BaseProduct::moro_normSInv(double u) {
 	a[0] = 2.50662823884;
 	a[1] = -18.61500062529;
 	a[2] = 41.39119773534;
-	a[3] -25.44106049637;
+	a[3] = -25.44106049637;
 	double b[4];
 	b[0] = -8.4735109309;
 	b[1] = 23.08336743743;

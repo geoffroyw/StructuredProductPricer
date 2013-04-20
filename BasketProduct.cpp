@@ -5,6 +5,7 @@
 #include <boost/random.hpp>
 #include <boost/random/normal_distribution.hpp>
 #include <stdexcept>
+#include <ctime>
 
 using namespace std;
 
@@ -53,7 +54,8 @@ void BasketProduct::simulateRandVars() {
 	for(int k = 0;k<nbSimulation;k++) {
 		for(int l =0; l<nbTimestep; l++) {
 			for(int i = 0; i<nbAsj; i++) {
-				randVars.push_back(var_nor());
+				//randVars.push_back(var_nor());
+				randVars.push_back(varNorm());
 				temp = 0.0;
 				for(int j=0;j<=i;j++) {
 					temp+=randVars[j]*cholM(i,j);
@@ -65,6 +67,8 @@ void BasketProduct::simulateRandVars() {
 	}
 	return;
 }
+
+
 
 void BasketProduct::simulatePseudoRandVars() {
 	double temp;

@@ -23,8 +23,8 @@ WinWin::WinWin(void) : BasketProduct()
 	setNbSimulation(1000);
 	setBarrierCoupon(5.0);
 	setFinalCoupon(10.0);
-	setHighBarrier(0.02);
-	setLowBarrier(0.01);
+	setHighBarrier(0.05);
+	setLowBarrier(0.02);
 	setCapital(100);
 	
 	correlations.resize(nbAsj,nbAsj,false);
@@ -71,78 +71,64 @@ void WinWin::simulatePaths() {
 	double sd;
 	double vol;
 	boost::numeric::ublas::matrix<double> S_ts(nbAsj,nbTimestep);
-	
 	vector<double> payoffs(nbSimulation);
-	
+
 	double performance;
 	double val_prec;
 	double val;
 
-	
-	bool highBarrierCross;
-	bool lowBarrierCross;
-
-	
 
 	for(int k = 0; k<nbSimulation; k++) {
-		highBarrierCross = false;
-		lowBarrierCross = false;
 		vector<int> TimestepsBarrierCross;
 
-		
 
 		for(int i = 0; i<nbAsj;i++) {
 			vol = correlations(i,i);
 			r = (riskFreeRate-0.5*pow(vol,2))*delta_t;
 			sd = vol*sqrt(delta_t);
 			S_ts(i,0) = spotPrices[i];
-			
 
 			for(int j = 1; j<nbTimestep;j++) {
-				
 				S_ts(i,j)= S_ts(i,j-1)*exp(r+sd*mRandVars[randVarIndex++]);
-
 			}
 		}
 
-		
+
 		for(int j=1;j<nbTimestep;j++) {
 			performance = 0.0;
 			val_prec = 0.0;
 			val = 0.0;
-			
 			for(int i = 0; i<nbAsj;i++) {
 				val+=S_ts(i,j);
 				val_prec+=S_ts(i,j-1);
-				
-			}
-			performance = (val-val_prec)/val_prec;
-			
-			if((performance>=highBarrier) || (performance<=lowBarrier)) {
-				highBarrierCross = highBarrierCross ||  performance>=highBarrier;
-				lowBarrierCross = lowBarrierCross || performance<=lowBarrier;
-				TimestepsBarrierCross.push_back(j);
 			}
 
-			
+			val /= nbAsj;
+			val_prec /=nbAsj;
+
+			performance = (val-val_prec)/val_prec;
+			if(performance>=highBarrier) {
+				
+				TimestepsBarrierCross.push_back(j);
+			}
+			if(performance<=lowBarrier) {
+				TimestepsBarrierCross.push_back(j);
+			}
 		}
 
 		payoff = 0.0;
 		for(int i = 0; i<TimestepsBarrierCross.size(); i++) {
 			payoff += barrierCoupon*exp(-riskFreeRate*TimestepsBarrierCross[i]/2);
 		}
-		
+
 		if(TimestepsBarrierCross.empty()) {
 			payoff += finalCoupon*exp(-riskFreeRate*maturity);
 		}
 
+		TimestepsBarrierCross.clear();
 		payoff += capital*exp(-riskFreeRate*maturity);
-	
 		payoffs[k] = payoff;
 		sum_payoffs += payoff;
-		TimestepsBarrierCross.clear();
-
-
 	}
 
 	mPrice = sum_payoffs/nbSimulation;

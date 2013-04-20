@@ -27,6 +27,7 @@ protected:
 
 	double moro_normSInv(double u);
 	double FaureBase2(int n);
+	double varNorm();
 	SimulationType simulationType;
 	
 	
