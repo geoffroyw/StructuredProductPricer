@@ -5,6 +5,7 @@
 #include "BestPlus.h"
 #include "BonusCliquet.h"
 #include "WinWin.h"
+#include "SimulationType.h"
 #include <boost/format.hpp>
 
 using namespace std;
@@ -15,6 +16,7 @@ int main( int argc, char* argv[] )
 	printf( "\nHello World\n\n" );
 
 	BaseProduct *p = new BestPlus();
+	(*p).setSimulationType(SimulationType::VarAntithetique);
 	(*p).price();
 	cout << "BESTPLUS\n";
 	cout << (*p).getPrice() <<"\n";
@@ -33,6 +35,7 @@ int main( int argc, char* argv[] )
 
 	
 	/*BonusCliquet *p = new BonusCliquet();
+	(*p).setSimulationType(SimulationType::VarAntithetique);
 	(*p).setSpotPrice(100.0);
 	(*p).setMaturity(5.0);
 	(*p).setVol(20.0/100.0);
@@ -59,6 +62,7 @@ int main( int argc, char* argv[] )
 
 
 	p = new WinWin();
+	(*p).setSimulationType(SimulationType::VarAntithetique);
 	(*p).price();
 	cout << "WINWIN\n";
 	cout << (*p).getPrice() <<"\n";

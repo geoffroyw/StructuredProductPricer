@@ -42,20 +42,26 @@ void BonusCliquet::simulatePaths() {
 	double r = (riskFreeRate-0.5*pow(vol,2))*delta_t;
 	double sd = vol*sqrt(delta_t);
 	double S_t;
+	double aS_t;
 
 	vector<double> payoffs;
 	
 	bool low_barrier_reach = false;
 	bool high_barrier_reach = true;
 
+	bool alow_barrier_reach = false;
+	bool ahigh_barrier_reach = true;
+
 	//Simulation
 	for(int k=0;k<nbSimulation;k++) {
 		high_barrier_reach = false;
 		low_barrier_reach = false;
 		S_t = spotPrice;
+		aS_t = spotPrice;
 
 		//On simule les trajectoires
 		for(int j = 1; j<nbTimestep;j++) {
+			aS_t= aS_t*exp(r-sd*mRandVars[randVarIndex]);
 			S_t= S_t*exp(r+sd*mRandVars[randVarIndex++]);
 
 			if(S_t>=highBarrier) {
@@ -63,6 +69,12 @@ void BonusCliquet::simulatePaths() {
 			}
 			if(S_t<=lowBarrier) {
 				low_barrier_reach = true;
+			}
+			if(aS_t>=highBarrier) {
+				ahigh_barrier_reach = true;
+			}
+			if(aS_t<=lowBarrier) {
+				alow_barrier_reach = true;
 			}
 		}
 
@@ -83,6 +95,26 @@ void BonusCliquet::simulatePaths() {
 			else {
 				payoff=S_t;
 			}
+		}
+
+		if(simulationType == SimulationType::VarAntithetique) {
+			if(!alow_barrier_reach) {
+				if(aS_t>highBarrier) {
+					payoff += aS_t;
+				}
+				else {
+					payoff +=highBarrier;
+				}
+			}
+			else {
+				if(ahigh_barrier_reach) {
+					payoff += highBarrier;
+				}
+				else {
+					payoff += aS_t;
+				}
+			}
+			payoff /= 2;
 		}
 
 		payoff*=exp(-riskFreeRate*maturity);

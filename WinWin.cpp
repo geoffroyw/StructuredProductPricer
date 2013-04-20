@@ -71,29 +71,43 @@ void WinWin::simulatePaths() {
 	double sd;
 	double vol;
 	boost::numeric::ublas::matrix<double> S_ts(nbAsj,nbTimestep);
+	boost::numeric::ublas::matrix<double> aS_ts(nbAsj,nbTimestep);
 	vector<double> payoffs(nbSimulation);
 	
 	double performance;
 	double val_prec;
 	double val;
 
+	double aperformance;
+	double aval_prec;
+	double aval;
+
 	bool highBarrierCross;
 	bool lowBarrierCross;
+
+	bool ahighBarrierCross;
+	bool alowBarrierCross;
 
 	for(int k = 0; k<nbSimulation; k++) {
 		highBarrierCross = false;
 		lowBarrierCross = false;
 		vector<int> TimestepsBarrierCross;
 
+		ahighBarrierCross = false;
+		alowBarrierCross = false;
+		vector<int> aTimestepsBarrierCross;
 
 		for(int i = 0; i<nbAsj;i++) {
 			vol = correlations(i,i);
 			r = (riskFreeRate-0.5*pow(vol,2))*delta_t;
 			sd = vol*sqrt(delta_t);
 			S_ts(i,0) = spotPrices[i];
+			aS_ts(i,0) = spotPrices[i];
 
 			for(int j = 1; j<nbTimestep;j++) {
+				aS_ts(i,j)= aS_ts(i,j-1)*exp(r-sd*mRandVars[randVarIndex]);
 				S_ts(i,j)= S_ts(i,j-1)*exp(r+sd*mRandVars[randVarIndex++]);
+
 			}
 		}
 
@@ -102,15 +116,27 @@ void WinWin::simulatePaths() {
 			performance = 0.0;
 			val_prec = 0.0;
 			val = 0.0;
+			aperformance = 0.0;
+			aval_prec = 0.0;
+			aval = 0.0;
 			for(int i = 0; i<nbAsj;i++) {
 				val+=S_ts(i,j);
 				val_prec+=S_ts(i,j-1);
+				aval+=aS_ts(i,j);
+				aval_prec+=aS_ts(i,j-1);
 			}
 			performance = (val-val_prec)/val_prec;
+			aperformance = (aval-aval_prec)/aval_prec;
 			if((performance>=highBarrier) || (performance<=lowBarrier)) {
 				highBarrierCross = highBarrierCross ||  performance>=highBarrier;
 				lowBarrierCross = lowBarrierCross || performance<=lowBarrier;
 				TimestepsBarrierCross.push_back(j);
+			}
+
+			if((aperformance>=highBarrier) || (aperformance<=lowBarrier)) {
+				ahighBarrierCross = ahighBarrierCross ||  aperformance>=highBarrier;
+				alowBarrierCross = alowBarrierCross || aperformance<=lowBarrier;
+				aTimestepsBarrierCross.push_back(j);
 			}
 		}
 
@@ -118,14 +144,31 @@ void WinWin::simulatePaths() {
 		for(int i = 0; i<TimestepsBarrierCross.size(); i++) {
 			payoff += barrierCoupon*exp(-riskFreeRate*TimestepsBarrierCross[i]/2);
 		}
-
+		
 		if(TimestepsBarrierCross.empty()) {
 			payoff += finalCoupon*exp(-riskFreeRate*maturity);
 		}
+
+		if(simulationType == SimulationType::VarAntithetique) {
+			for(int i = 0; i<aTimestepsBarrierCross.size(); i++) {
+				payoff += barrierCoupon*exp(-riskFreeRate*aTimestepsBarrierCross[i]/2);
+			}
+			if(aTimestepsBarrierCross.empty()) {
+				payoff += finalCoupon*exp(-riskFreeRate*maturity);
+			}
+		}
+
+		
+
+
 		payoff += capital*exp(-riskFreeRate*maturity);
+		if(simulationType == SimulationType::VarAntithetique) {
+			payoff /=2.0;
+		}
 		payoffs[k] = payoff;
 		sum_payoffs += payoff;
 		TimestepsBarrierCross.clear();
+		aTimestepsBarrierCross.clear();
 
 	}
 
