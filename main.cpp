@@ -16,7 +16,7 @@ int main( int argc, char* argv[] )
 	printf( "\nHello World\n\n" );
 
 	BaseProduct *p = new BestPlus();
-	(*p).setSimulationType(SimulationType::VarAntithetique);
+	/*(*p).setSimulationType(SimulationType::VarAntithetique);
 	(*p).price();
 	cout << "BESTPLUS\n";
 	cout << (*p).getPrice() <<"\n";
@@ -30,7 +30,7 @@ int main( int argc, char* argv[] )
 	cout << "Theta: " <<(*p).getTheta() << "\n";
 	cout << "Rho: " <<(*p).getRho() << "\n";
 	cout << "Vega: " <<(*p).getVega() << "\n";
-	cout << "\n\n\n";
+	cout << "\n\n\n";*/
 	delete p;
 
 	
@@ -62,7 +62,7 @@ int main( int argc, char* argv[] )
 
 
 	p = new WinWin();
-	(*p).setSimulationType(SimulationType::VarAntithetique);
+	(*p).setSimulationType(SimulationType::MonteCarlo);
 	(*p).price();
 	cout << "WINWIN\n";
 	cout << (*p).getPrice() <<"\n";

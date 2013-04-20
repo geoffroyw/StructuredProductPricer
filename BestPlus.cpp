@@ -44,7 +44,7 @@ BestPlus::~BestPlus(void)
 }
 
 void BestPlus::price() {
-	if(simulationType == SimulationType::MonteCarlo || simulationType == SimulationType::VarAntithetique) {
+	if(simulationType == SimulationType::MonteCarlo) {
 		simulateRandVars();
 	}
 	else {
@@ -57,31 +57,29 @@ void BestPlus::price() {
 
 void BestPlus::simulatePaths() {
 	int timestep_first_coupon = -1;
-	int atimestep_first_coupon = -1;
 	int randVarIndex = 0;
 	double payoff = 0.0;
 	double sum_payoffs = 0.0;
 	double best_pf_performance = 0.0;
-	double abest_pf_performance = 0.0;
 	double delta_t = maturity/nbTimestep;
 	double r;
 	double sd;
 	double vol;
 	
 	vector<double> saved_pf_value(nbTimestep);
-	vector<double> asaved_pf_value(nbTimestep);
+
 	vector<double> payoffs(nbSimulation);
 
 	boost::numeric::ublas::matrix<double> S_ts(nbAsj,nbTimestep);
-	boost::numeric::ublas::matrix<double> aS_ts(nbAsj,nbTimestep);
+
 
 	//Première valeur sauvegardée du portefeuille :  moyenne des spots
 	for(int i=0;i<spotPrices.size();i++) {
 		saved_pf_value[0]+=spotPrices[i];
-		asaved_pf_value[0]+=spotPrices[i];
+		
 	}
 	saved_pf_value[0]/=nbAsj;
-	asaved_pf_value[0]/=nbAsj;
+
 
 	//Simulation des trajectoires
 	for(int k = 0;k<nbSimulation;k++) {
@@ -91,10 +89,9 @@ void BestPlus::simulatePaths() {
 			r = (riskFreeRate-0.5*pow(vol,2))*delta_t;
 			sd = vol*sqrt(delta_t);
 			S_ts(i,0) = spotPrices[i];
-			aS_ts(i,0) = spotPrices[i];
+	
 
 			for(int j = 1; j<nbTimestep;j++) {
-				aS_ts(i,j)= aS_ts(i,j-1)*exp(r-sd*mRandVars[randVarIndex]);
 				S_ts(i,j)= S_ts(i,j-1)*exp(r+sd*mRandVars[randVarIndex++]);
 			}
 		}
@@ -102,21 +99,16 @@ void BestPlus::simulatePaths() {
 		boost::numeric::ublas::matrix<double> performance(nbAsj,nbTimestep);
 		vector<int> saved_performance_index;
 		
-		boost::numeric::ublas::matrix<double> aperformance(nbAsj,nbTimestep);
-		vector<int> asaved_performance_index;
+
 
 		int best_perf1_index(1), best_perf2_index(0);
 		double best_perf1_value(-1), best_perf2_value(-1);
 
-		int abest_perf1_index(1), abest_perf2_index(0);
-		double abest_perf1_value(-1), abest_perf2_value(-1);
 
 		//A chaque date anniversaire, on prend les deux meilleures performances
 		for(int j=1;j<nbTimestep;j++) {
 			best_perf1_value = -1;
 			best_perf2_value = -1;
-			abest_perf1_value = -1;
-			abest_perf2_value = -1;
 			for(int i = 0;i<nbAsj;i++) {
 				if(find(saved_performance_index.begin(), saved_performance_index.end(), i) == saved_performance_index.end()) {
 					performance(i,j)=(S_ts(i,j)-S_ts(i,j-1))/S_ts(i,j-1);
@@ -157,49 +149,6 @@ void BestPlus::simulatePaths() {
 			if(best_pf_performance>=performance_obj && timestep_first_coupon<0) {
 				timestep_first_coupon = j;
 			}
-
-
-
-			if(simulationType == SimulationType::VarAntithetique) {
-				for(int i = 0;i<nbAsj;i++) {
-					if(find(asaved_performance_index.begin(), asaved_performance_index.end(), i) == asaved_performance_index.end()) {
-						aperformance(i,j)=(aS_ts(i,j)-aS_ts(i,j-1))/aS_ts(i,j-1);
-					
-						if(aperformance(i,j)>=abest_perf1_value) {
-							abest_perf2_value = abest_perf1_value;
-							abest_perf2_index = abest_perf1_index;
-							abest_perf1_value = aperformance(i,j);
-							abest_perf1_index = i; 
-						}
-						if(aperformance(i,j)>abest_perf2_value && i!=abest_perf1_index) {
-							abest_perf2_value = aperformance(i,j);
-							abest_perf2_index = i; 
-						}
-					}
-				}
-				asaved_performance_index.push_back(abest_perf1_index);
-				asaved_performance_index.push_back(abest_perf2_index);
-
-				for(int l=j+1;l<nbTimestep-1;l++) {
-					aperformance(abest_perf1_index,l)=aperformance(best_perf1_index,j);
-					aperformance(abest_perf2_index,l)=aperformance(best_perf2_index,j);
-				}
-				//Calcul de la valeur du PF sécurisée
-				asaved_pf_value[j]=0;
-				for(int i=0;i<nbAsj;i++) {
-					asaved_pf_value[j]+=aS_ts(i,j);
-				}
-				asaved_pf_value[j]/=nbAsj;
-
-				if(abest_pf_performance<(asaved_pf_value[j]-asaved_pf_value[j-1])/asaved_pf_value[j-1]) {
-					abest_pf_performance = (asaved_pf_value[j]-asaved_pf_value[j-1])/asaved_pf_value[j-1];
-				}
-
-				//Est-ce qu'on donne un coupon ?
-				if(abest_pf_performance>=performance_obj && atimestep_first_coupon<0) {
-					atimestep_first_coupon = j;
-				}
-			}
 		}
 
 
@@ -215,19 +164,6 @@ void BestPlus::simulatePaths() {
 			}
 		}
 		payoff+=capital*(1+best_pf_performance)*exp(-riskFreeRate*nbTimestep);
-		if(simulationType == SimulationType::VarAntithetique) {
-			double amemory_coupon = 0;
-			if(atimestep_first_coupon>=0) {
-				amemory_coupon = atimestep_first_coupon*0.07;
-				payoff += capital*amemory_coupon*exp(-riskFreeRate*atimestep_first_coupon);
-
-				for(int i = atimestep_first_coupon; i<nbTimestep;i++) {
-					payoff += capital*0.07*exp(-riskFreeRate*i);
-				}
-			}
-			payoff+=capital*(1+abest_pf_performance)*exp(-riskFreeRate*nbTimestep);
-			payoff /= 2;
-		}
 
 		payoffs.push_back(payoff);
 
@@ -290,7 +226,7 @@ void BestPlus::computeGreeks(){
 		pCorrelations(k,k) -= deltaSigma;
 
 		setCorrelations(mCorrelations);
-		if(simulationType == SimulationType::MonteCarlo || simulationType == SimulationType::VarAntithetique) {
+		if(simulationType == SimulationType::MonteCarlo) {
 			simulateRandVars();
 		}
 		else {
@@ -299,7 +235,7 @@ void BestPlus::computeGreeks(){
 		simulatePaths();
 		s1 = mPrice;
 		setCorrelations(pCorrelations);
-		if(simulationType == SimulationType::MonteCarlo || simulationType == SimulationType::VarAntithetique) {
+		if(simulationType == SimulationType::MonteCarlo) {
 			simulateRandVars();
 		}
 		else {
@@ -309,7 +245,7 @@ void BestPlus::computeGreeks(){
 		s2 = mPrice;
 		vega += (s2-s1)/(2*deltaSigma);
 		setCorrelations(initialCorrelations);
-		if(simulationType == SimulationType::MonteCarlo || simulationType == SimulationType::VarAntithetique) {
+		if(simulationType == SimulationType::MonteCarlo) {
 			simulateRandVars();
 		}
 		else {
