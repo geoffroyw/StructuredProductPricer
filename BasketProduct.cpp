@@ -28,7 +28,7 @@ void BasketProduct::cholesky() {
 		}
 	}
 	
-	for(int j=0;j<cholM.size1();j++) {
+	/*for(int j=0;j<cholM.size1();j++) {
 		x = 0.0;
 		for(int k = 0; k<j-1; k++) {
 			x += cholM(j,k)*cholM(j,k);
@@ -53,6 +53,26 @@ void BasketProduct::cholesky() {
 			cholM(i,j) = (correlations(i,j)-x)/cholM(j,j);
 		}
 
+	}*/
+
+	cholM(0,0) = sqrt(correlations(0,0));
+	for(int j = 1 ; j<cholM.size2(); j++) {
+		cholM(j,0) = correlations(0,j)/cholM(0,0);
+	}
+	for(int i = 1; i<cholM.size1(); i++) {
+		x = 0.0;
+		for(int k = 0; k<i-1;k++) {
+			x += cholM(i,k)*cholM(i,k);
+		}
+		cholM(i,i) = sqrt(correlations(i,i)-x);
+
+		for(int j = i+1; j<cholM.size2(); j++) {
+			x = 0.0;
+			for(int k =0; k<i-1; k++) {
+				x += cholM(i,k)*cholM(j,k);
+			}
+			cholM(j,i) = (correlations(i,j) - x)/cholM(i,i);
+		}
 	}
 }
 
